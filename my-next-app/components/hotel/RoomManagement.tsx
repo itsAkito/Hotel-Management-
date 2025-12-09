@@ -83,8 +83,8 @@ export default function RoomManagement({ hotelId, rooms, onRoomsChange }: RoomMa
   const onSubmit = async (data: RoomFormData) => {
     try {
       const endpoint = editingRoom 
-        ? `/api/hotel/${hotelId}/rooms/${editingRoom.id}`
-        : `/api/hotel/${hotelId}/rooms`;
+        ? `/api/hotels/${hotelId}/rooms/${editingRoom.id}`
+        : `/api/hotels/${hotelId}/rooms`;
       
       const method = editingRoom ? 'PUT' : 'POST';
       
@@ -96,6 +96,7 @@ export default function RoomManagement({ hotelId, rooms, onRoomsChange }: RoomMa
 
       if (response.ok) {
         const result = await response.json();
+        console.log('Room saved successfully:', result);
         
         if (editingRoom) {
           setRoomsList(roomsList.map(r => r.id === editingRoom.id ? result : r));
@@ -107,13 +108,18 @@ export default function RoomManagement({ hotelId, rooms, onRoomsChange }: RoomMa
         setShowForm(false);
         setEditingRoom(null);
         onRoomsChange?.(editingRoom ? roomsList.map(r => r.id === editingRoom.id ? result : r) : [...roomsList, result]);
-        alert(editingRoom ? 'Room updated!' : 'Room created!');
+        alert(editingRoom ? 'Room updated successfully!' : 'Room created successfully!');
       } else {
-        alert('Failed to save room');
+        const errorData = await response.json();
+        const errorMessage = errorData.error || 'Failed to save room';
+        console.error('API error response:', { status: response.status, statusText: response.statusText, error: errorMessage });
+        console.error('Request payload:', data);
+        alert(`Failed to save room:\n${errorMessage}`);
       }
     } catch (error) {
       console.error('Error saving room:', error);
-      alert('Error saving room');
+      const errorMessage = error instanceof Error ? error.message : 'Error saving room';
+      alert(`Error: ${errorMessage}`);
     }
   };
 
@@ -121,7 +127,7 @@ export default function RoomManagement({ hotelId, rooms, onRoomsChange }: RoomMa
     if (!confirm('Are you sure you want to delete this room?')) return;
 
     try {
-      const response = await fetch(`/api/hotel/${hotelId}/rooms/${roomId}`, {
+      const response = await fetch(`/api/hotels/${hotelId}/rooms/${roomId}`, {
         method: 'DELETE',
       });
 
@@ -131,11 +137,15 @@ export default function RoomManagement({ hotelId, rooms, onRoomsChange }: RoomMa
         onRoomsChange?.(updatedRooms);
         alert('Room deleted!');
       } else {
-        alert('Failed to delete room');
+        const errorData = await response.json();
+        const errorMessage = errorData.error || 'Failed to delete room';
+        console.error('API error:', errorMessage);
+        alert(`Failed to delete room: ${errorMessage}`);
       }
     } catch (error) {
       console.error('Error deleting room:', error);
-      alert('Error deleting room');
+      const errorMessage = error instanceof Error ? error.message : 'Error deleting room';
+      alert(`Error: ${errorMessage}`);
     }
   };
 
@@ -361,7 +371,7 @@ export default function RoomManagement({ hotelId, rooms, onRoomsChange }: RoomMa
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel className="!mt-0">Available</FormLabel>
+                      <FormLabel className="mt-0!">Available</FormLabel>
                     </FormItem>
                   )}
                 />
@@ -383,7 +393,7 @@ export default function RoomManagement({ hotelId, rooms, onRoomsChange }: RoomMa
                               onCheckedChange={field.onChange}
                             />
                           </FormControl>
-                          <FormLabel className="capitalize text-sm !mt-0">
+                          <FormLabel className="capitalize text-sm mt-0!">
                             {amenity.replace(/([A-Z])/g, ' $1').trim()}
                           </FormLabel>
                         </FormItem>

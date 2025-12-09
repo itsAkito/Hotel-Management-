@@ -35,7 +35,8 @@ export async function POST(
     return NextResponse.json(room, { status: 201 });
   } catch (error) {
     console.error('Error creating room:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -69,6 +70,7 @@ export async function GET(
     return NextResponse.json(rooms);
   } catch (error) {
     console.error('Error fetching rooms:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
