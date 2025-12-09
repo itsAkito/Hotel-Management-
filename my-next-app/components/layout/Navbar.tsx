@@ -97,7 +97,9 @@ const Navbar = () => {
                   Welcome!
                 </span>
                 <SignOutButton>
-                  <LogOut className="h-5 w-5 p-2 rounded-lg hover:bg-red-500/30 dark:hover:bg-red-900/30 transition-colors text-red-200 hover:text-red-100 cursor-pointer" />
+                  <button className="p-2 rounded-lg hover:bg-red-500/30 dark:hover:bg-red-900/30 transition-colors text-red-200 hover:text-red-100 cursor-pointer">
+                    <LogOut className="h-5 w-5" />
+                  </button>
                 </SignOutButton>
               </div>
             )}
@@ -183,10 +185,10 @@ const Navbar = () => {
             {isSignedIn && (
               <div className="pt-4 border-t border-gray-200 dark:border-slate-800">
                 <SignOutButton>
-                  <div className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                  <button className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors shadow-md flex items-center justify-center gap-2 cursor-pointer">
                     <LogOut className="h-4 w-4" />
                     Sign Out
-                  </div>
+                  </button>
                 </SignOutButton>
               </div>
             )}

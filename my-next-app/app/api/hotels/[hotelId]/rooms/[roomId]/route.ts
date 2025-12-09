@@ -36,7 +36,8 @@ export async function GET(
     return NextResponse.json(room);
   } catch (error) {
     console.error('Error fetching room:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -81,7 +82,8 @@ export async function PUT(
     return NextResponse.json(updatedRoom);
   } catch (error) {
     console.error('Error updating room:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -124,6 +126,7 @@ export async function DELETE(
     return NextResponse.json({ message: 'Room deleted' });
   } catch (error) {
     console.error('Error deleting room:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
